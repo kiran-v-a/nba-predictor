@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI-powered NBA game outcome predictions using XGBoost machine learning." />
+  <title>NBA Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- SCROLL PROGRESS BAR -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <!-- PRELOADER -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-content">
+      <div class="preloader-title">NBA PREDICTOR</div>
+      <div class="preloader-line-track"><div class="preloader-line-fill" id="preloader-line"></div></div>
+    </div>
+  </div>
+
+  <!-- CURSOR -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- GRAIN -->
+  <svg class="grain-svg" xmlns="http://www.w3.org/2000/svg"><filter id="grain-filter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain-filter)"/></svg>
+
+  <!-- CANVAS -->
+  <canvas id="basketball-canvas"></canvas>
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- SIDE NAV -->
+  <nav class="side-nav" id="side-nav">
+    <div class="side-nav-item active" data-target="hero"><span class="nav-num">I</span><span class="nav-lbl">Home</span></div>
+    <div class="side-nav-item" data-target="predict"><span class="nav-num">II</span><span class="nav-lbl">Predict</span></div>
+    <div class="side-nav-item" data-target="how-it-works"><span class="nav-num">III</span><span class="nav-lbl">Method</span></div>
+    <div class="side-nav-item" data-target="footer"><span class="nav-num">IV</span><span class="nav-lbl">Credits</span></div>
+  </nav>
+
+  <!-- SCROLL WRAPPER -->
+  <div class="smooth-scroll-wrapper" id="smooth-wrapper">
+    <div class="main-content" id="main-content">
+
+      <!-- ═══ HERO SCENE (Full-viewport artwork) ═══ -->
+      <section class="section section--hero" id="hero">
+        <!-- Scene background artwork -->
+        <div class="scene-bg" id="scene-bg">
+          <img src="hero-bg.png" alt="" class="scene-bg-img" />
+          <div class="scene-bg-overlay"></div>
+        </div>
+        <!-- Content layered on top -->
+        <div class="hero-frame" data-reveal>
+          <h1 class="hero-title" id="hero-title" data-split>NBA Predictor</h1>
+          <p class="hero-sub">Real-time game outcome analysis powered<br/>by 3 seasons of NBA data and XGBoost ML</p>
+          <div class="hero-meta">
+            <span>30 Teams</span><span class="dot"></span><span>6 Features</span><span class="dot"></span><span>Live Analytics</span>
+          </div>
+        </div>
+        <div class="scroll-cue" data-reveal data-reveal-delay="1200">
+          <span>Scroll</span>
+          <div class="scroll-cue-line"></div>
+        </div>
+        <!-- Scroll-driven dissolve transition -->
+        <div class="scene-dissolve" id="scene-dissolve"></div>
+      </section>
+
+      <!-- ═══ STATS SHOWCASE ═══ -->
+      <section class="section section--stats" id="stats">
+        <div class="stats-strip">
+          <div class="stat-counter" data-reveal><span class="stat-big" data-count-to="3">0</span><span class="stat-unit">Seasons</span></div>
+          <div class="stat-divider-v"></div>
+          <div class="stat-counter" data-reveal data-reveal-delay="100"><span class="stat-big" data-count-to="30">0</span><span class="stat-unit">Teams</span></div>
+          <div class="stat-divider-v"></div>
+          <div class="stat-counter" data-reveal data-reveal-delay="200"><span class="stat-big" data-count-to="4800">0</span><span class="stat-unit">Games Analyzed</span></div>
+          <div class="stat-divider-v"></div>
+          <div class="stat-counter" data-reveal data-reveal-delay="300"><span class="stat-big" data-count-to="6">0</span><span class="stat-unit">Feature Vectors</span></div>
+        </div>
+      </section>
+
+      <!-- ═══ EDITORIAL SCROLL TEXT ═══ -->
+      <section class="section section--editorial" id="editorial">
+        <div class="editorial-text-block">
+          <p class="scroll-text" id="scroll-text-1" data-scroll-reveal>
+            We trained a machine learning model on three complete NBA seasons — over 4,800 games of real performance data — to predict game outcomes with statistical precision.
+          </p>
+        </div>
+        <div class="editorial-text-block">
+          <p class="scroll-text" id="scroll-text-2" data-scroll-reveal>
+            Every matchup is analyzed through six engineered feature vectors: win rate, scoring average, pace, offensive rating, defensive rating, and recent form.
+          </p>
+        </div>
+      </section>
+
+      <!-- ═══ PREDICT ═══ -->
+      <section class="section section--predict" id="predict">
+        <div class="split-layout">
+          <div class="split-left" data-reveal>
+            <div class="tag">II. Prediction</div>
+            <h2 class="editorial-heading">Select<br/><em>Your Matchup</em></h2>
+            <p class="prose">Choose any two NBA teams. Our XGBoost classifier analyzes season-long performance metrics and computes a real-time win probability.</p>
+          </div>
+          <div class="split-right">
+            <div class="predict-card glass-card tilt-card" data-reveal data-reveal-delay="200">
+              <div class="team-selectors">
+                <div class="select-group">
+                  <label for="home-team">Home Team</label>
+                  <select class="glass-select" id="home-team"><option value="">Loading teams...</option></select>
+                </div>
+                <div class="vs-divider"><span class="vs-line"></span><span class="vs-text">vs</span><span class="vs-line"></span></div>
+                <div class="select-group">
+                  <label for="away-team">Away Team</label>
+                  <select class="glass-select" id="away-team"><option value="">Loading teams...</option></select>
+                </div>
+              </div>
+              <button class="predict-btn" id="predict-btn" onclick="handlePredict()" data-magnetic-spring>Predict Winner</button>
+              <div class="result-area" id="result-area">
+                <div class="result-card glass-card" id="result-card"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ HOW IT WORKS (Scroll-driven horizontal) ═══ -->
+      <section class="section section--how-pin" id="how-it-works">
+        <div class="how-pin-inner">
+          <div class="how-header" data-reveal>
+            <div class="tag">III. Under the Hood</div>
+            <h2 class="editorial-heading">How <em>It Works</em></h2>
+          </div>
+          <div class="hscroll-viewport" id="hscroll-viewport">
+            <div class="hscroll-track" id="hscroll-track">
+              <div class="hscroll-card glass-card tilt-card">
+                <div class="hscroll-num">01</div>
+                <h3 class="hscroll-title">Data<br/>Collection</h3>
+                <p class="hscroll-desc">Three full NBA seasons of game logs pulled from the official NBA Stats API. Every team, every game, every stat line.</p>
+              </div>
+              <div class="hscroll-card glass-card tilt-card">
+                <div class="hscroll-num">02</div>
+                <h3 class="hscroll-title">Feature<br/>Engineering</h3>
+                <p class="hscroll-desc">Win rates, scoring averages, pace, offensive and defensive ratings computed per-team to create powerful matchup features.</p>
+              </div>
+              <div class="hscroll-card glass-card tilt-card">
+                <div class="hscroll-num">03</div>
+                <h3 class="hscroll-title">XGBoost<br/>Classifier</h3>
+                <p class="hscroll-desc">A gradient-boosted decision tree model analyzes the feature delta between teams and outputs a calibrated win probability.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TICKER ═══ -->
+      <section class="section section--ticker" id="ticker" data-reveal>
+        <div class="ticker-track" id="ticker-track"></div>
+      </section>
+
+      <!-- ═══ FOOTER ═══ -->
+      <footer class="section section--footer" id="footer" data-reveal>
+        <div class="footer-inner glass-card">
+          <div class="footer-logo">NBA PREDICTOR</div>
+          <div class="footer-divider"></div>
+          <p class="footer-text">Built with FastAPI / XGBoost / NBA API</p>
+          <p class="footer-text">2026 — AI-Powered Sports Analytics</p>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
